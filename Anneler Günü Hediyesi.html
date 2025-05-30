@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<!-- saved from url=(0098)http://localhost:63342/Egitim/index.html?_ijt=2ddh3kpfe8l0llt3e78vsq48te&_ij_reload=RELOAD_ON_SAVE -->
+<html lang="tr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Anneler Günü Hediyesi</title>
+    <style>
+        body {
+          margin: 0;
+          height: 100vh;
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          background:
+            linear-gradient(rgba(255, 240, 246, 0.7), rgba(255, 240, 246, 0.7)),
+            url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1470&q=80') no-repeat center center/cover;
+          overflow-x: hidden;
+        }
+        #buttonContainer {
+          display: flex;
+          align-items: center;
+          gap: 15px;
+          margin-bottom: 40px;
+        }
+        button {
+          background-color: #d12f48;
+          border: none;
+          color: white;
+          padding: 15px 30px;
+          font-size: 1.6rem;
+          border-radius: 12px;
+          cursor: pointer;
+          box-shadow: 0 5px 15px rgba(209, 47, 72, 0.6);
+          transition: background-color 0.3s ease;
+        }
+        button:hover {
+          background-color: #a82236;
+        }
+        #roseEmoji {
+          font-size: 2.5rem;
+          opacity: 0;
+          transition: opacity 0.6s ease;
+        }
+        #roseEmoji.visible {
+          opacity: 1;
+        }
+        .heart {
+          position: absolute;
+          width: 30px;
+          height: 30px;
+          background-color: #ff4d6d;
+          clip-path: polygon(
+            50% 0%,
+            100% 35%,
+            80% 100%,
+            50% 80%,
+            20% 100%,
+            0% 35%
+          );
+          opacity: 0.8;
+          animation: floatUp 3s forwards;
+        }
+        @keyframes floatUp {
+          0% {
+            transform: translateY(0) scale(1);
+            opacity: 0.8;
+          }
+          100% {
+            transform: translateY(-150px) scale(1.5);
+            opacity: 0;
+          }
+        }
+        .message {
+          font-size: 2.5rem;
+          color: #d12f48;
+          opacity: 0;
+          animation: fadeInText 2s forwards;
+          margin-top: 20px;
+          text-align: center;
+          text-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
+        }
+        .submessage {
+          font-size: 2rem;
+          color: #a82236;
+          opacity: 0;
+          animation: fadeInText 2s forwards;
+          animation-delay: 2s;
+          margin-top: 10px;
+          text-align: center;
+          text-shadow: 0 0 4px rgba(255, 255, 255, 0.7);
+        }
+        @keyframes fadeInText {
+          to {
+            opacity: 1;
+          }
+        }
+    </style>
+</head>
+<body>
+<div id="buttonContainer">
+    <button id="giveRoseBtn">Tıkla Canım Annem</button>
+    <span id="roseEmoji">🌹</span>
+</div>
+
+<div class="message"></div>
+<div class="submessage"></div>
+
+<script>
+    const btn = document.getElementById('giveRoseBtn');
+    const roseEmoji = document.getElementById('roseEmoji');
+    const message = document.querySelector('.message');
+    const submessage = document.querySelector('.submessage');
+
+    function createHeart() {
+      const heart = document.createElement('div');
+      heart.classList.add('heart');
+      heart.style.left = (window.innerWidth / 2 + (Math.random() * 100 - 50)) + 'px';
+      heart.style.top = (window.innerHeight / 2 + 50 + (Math.random() * 50)) + 'px';
+      document.body.appendChild(heart);
+
+      setTimeout(() => {
+        heart.remove();
+      }, 3000);
+    }
+
+    function launchHearts(count) {
+      let heartsCreated = 0;
+      const interval = setInterval(() => {
+        createHeart();
+        heartsCreated++;
+        if (heartsCreated >= count) {
+          clearInterval(interval);
+          message.textContent = 'Anneler Günün Kutlu Olsun 💖';
+          message.style.animation = 'fadeInText 2s forwards';
+
+          setTimeout(() => {
+            submessage.textContent = 'İyi ki Varsın ❤️';
+            submessage.style.animation = 'fadeInText 2s forwards';
+          }, 2000);
+        }
+      }, 300);
+    }
+
+    btn.addEventListener('click', () => {
+      btn.disabled = true;
+      roseEmoji.classList.add('visible');
+      launchHearts(15);
+    });
+</script>
+
+
+<script>
+(function() {
+  var ws = new WebSocket('ws://' + window.location.host + 
+             '/jb-server-page?reloadMode=RELOAD_ON_SAVE&'+
+             'referrer=' + encodeURIComponent(window.location.pathname));
+  ws.onmessage = function (msg) {
+      if (msg.data === 'reload') {
+          window.location.reload();
+      }
+      if (msg.data.startsWith('update-css ')) {
+          var messageId = msg.data.substring(11);
+          var links = document.getElementsByTagName('link');
+          for (var i = 0; i < links.length; i++) {
+              var link = links[i];
+              if (link.rel !== 'stylesheet') continue;
+              var clonedLink = link.cloneNode(true);
+              var newHref = link.href.replace(/(&|\?)jbUpdateLinksId=\d+/, "$1jbUpdateLinksId=" + messageId);
+              if (newHref !== link.href) {
+                clonedLink.href = newHref;
+              }
+              else {
+                var indexOfQuest = newHref.indexOf('?');
+                if (indexOfQuest >= 0) {
+                  // to support ?foo#hash 
+                  clonedLink.href = newHref.substring(0, indexOfQuest + 1) + 'jbUpdateLinksId=' + messageId + '&' + 
+                                    newHref.substring(indexOfQuest + 1);
+                }
+                else {
+                  clonedLink.href += '?' + 'jbUpdateLinksId=' + messageId;
+                }
+              }
+              link.replaceWith(clonedLink);
+          }
+      }
+  };
+})();
+</script></body></html>
